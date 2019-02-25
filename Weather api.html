@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>React api</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id='root'></div>
+    
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    
+    <script type="text/babel">
+     class RestWeather extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {description: '', img: '', main:''};
+        }
+        componentDidMount() {
+          fetch('https://api.openweathermap.org/data/2.5/weather?q=London&APPID=716bb92e13a13ca33dc7181747ce3c68&units=metric')
+          .then((response) => response.json()) 
+          .then((responseData) => { 
+             console.log(responseData);
+              this.setState({ 
+                description: responseData.weather[0].description,
+                img: responseData.weather[0].icon,
+                main: responseData.main.temp
+              }); 
+          });
+        }
+        
+        render() {
+            const url = "http://openweathermap.org/img/w/" + this.state.img + ".png";
+            if (this.state.img !== '') {
+            return ( 
+              <div>
+                <div>Temperature: {this.state.main}</div>
+                <div>Weather: {this.state.description}</div>
+                <div>
+                <img src={url} alt="weathericon"/>
+                </div>
+              </div>
+              )
+            }
+            else{
+              return <div> Error </div>
+            }
+        }
+     }
+      ReactDOM.render(<RestWeather/>, document.getElementById('root'));
+       </script>
+  </body>
+</html>
